@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>使用说明</title>
+    <style type="text/css">
+        p {
+            margin-left: 400px;
+        }
+        .page-header {
+            padding-bottom: 0px;
+            margin: 40px 0 20px;
+            border-bottom: 0px solid #eee;
+        }
+    </style>
+</head>
+<body>
+<div class="page-header" style="text-align: center">
+    <h1>使用说明</h1>
+    <h1 style="position: relative;"><small>&nbsp;&nbsp;&nbsp;  <a href="index.php" style="position: absolute;right: 0px;" class="text-muted"><strong>返回</strong></a></small></h1>
+</div>
+
+<div class="jumbotron">
+   <p class="text-left"><img src="intro.png"></p>
+<p class="text-left">1.开始价格对应当前币种价格</p>
+<p class="text-left">2.结束价格对应的是想要达到的目标价格</p>
+<p class="text-left">3.卖/买的比例对应的是次涨幅/跌幅的比例，每次涨幅梯度的多少由这个比例决定，每一次调价的价格的涨价为目标价格*买/卖比例（比如目标价格20，卖比例为10，每次价格浮动为2）</p>
+<p class="text-left">4.时间间隔为多少秒进行一次买卖（拉价操作）</p>
+<p class="text-left">5.网格长度为买/卖满屏时交易网格的长度</p>
+<p class="text-left">6.设置好数据后点击开始，如果想要中途停止的话点击停止按钮</p>
+
+<p class="text-danger">注意：</p>
+    <p class="text-danger">1.保证有充足数量的币来进行交易</p>
+    <p class="text-danger">2.点击开始后程序在后台运行，关掉页面不会使操作中断</p>        
+</div>
+
+
+
+
+
+
+
+</body>
+</html>

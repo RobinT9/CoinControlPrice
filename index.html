@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Price Control</title>
+    <style>
+        form {
+            display: block;
+            margin-top: 0em;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            height: 33px;
+        }
+        .col-sm-2 {
+            width: 11.666667%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header" style="text-align: center">
+    <h1>网格挂单程序</h1>
+    <h1 style="position: relative;"><small>请在主站登陆后再进行操作&nbsp;&nbsp;&nbsp;<a href="" class="text-muted"><strong>点击去登陆</strong></a>  <a href="intro.html" style="position: absolute;right: 0px;" class="text-muted"><strong>使用说明</strong></a></small></h1>
+</div>
+
+<form role="form" action="main.php" method="post">
+    <div class="form-group">
+        <label for="startPrice" class="col-sm-2 control-label">开始价格</label>
+        <div class="col-sm-10">
+            <input type="text" id="startPrice" class="form-control"  placeholder="请输入开始价格">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="endPrice" class="col-sm-2 control-label">结束价格</label>
+        <div class="col-sm-10">
+            <input type="text" id="endPrice" class="form-control"  placeholder="请输入结束价格">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="sell_ratio" class="col-sm-2 control-label">卖比例（例：5代表5%）</label>
+        <div class="col-sm-10">
+            <input type="text" id="sell_ratio" class="form-control" placeholder="请输入比例,1~100">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="buy_ratio" class="col-sm-2 control-label">买比例（例：5代表5%）</label>
+        <div class="col-sm-10">
+            <input type="text" id="buy_ratio" class="form-control" placeholder="请输入比例,1~100">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="period" class="col-sm-2 control-label">时间间隔(秒，几秒进行一次)</label>
+        <div class="col-sm-10">
+            <input type="text" id="period" class="form-control" placeholder="请输入比例">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="webrange" class="col-sm-2 control-label">网格长度</label>
+        <div class="col-sm-10">
+            <input type="text" id="webrange" class="form-control" placeholder="请输入网格长度">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="coin" class="col-sm-2 control-label">选择币种</label>
+        <div class="col-sm-10">
+            <select id="coin"  class="form-control">
+                <?php
+    		$List = getCoinMarketList();
+    		if(!$List){
+
+    		}
+    		$List = json_decode($List,true);
+    		$coinList = $List['productList'];
+		for($i=0;$i<count($coinList);$i++){
+            		echo '<option>'.$coinList[$i].'</option>';
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="form-group" align="center">
+        <div class="col-sm-12">
+            <input type="button" id="tijiao" value="开始"  class="btn btn-primary">
+            <input type="button" id="stop"   value="停止" class="btn btn-danger" >
+        </div>
+    </div>
+
+</form>
+
+
+
+
+<!--开始价格：<input type="text" id="startPrice" class="form-control"><br>-->
+<!--结束价格：<input type="text" id="endPrice" class="form-control"><br>-->
+<!--卖比例（例：5代表5%）：<input type="text" id="sell_ratio" class="form-control"><br>-->
+<!--买比例（例：5代表5%）：<input type="text" id="buy_ratio" class="form-control"><br>-->
+<!--时间间隔：<input type="text" id="period" class="form-control"><br>-->
+<!--网格长度：<input type="text" id="webrange" class="form-control"><br>-->
+<!--选择币种：<select id="coin"  class="form-control">-->
+<!--<?php-->
+<!--$List = getCoinMarketList();-->
+<!--if(!$List){-->
+
+<!--}-->
+<!--$List = json_decode($List,true);-->
+<!--$coinList = $List['productList'];-->
+<!--for($i=0;$i<count($coinList);$i++){-->
+<!--echo '<option>'.$coinList[$i].'</option>';-->
+<!--}-->
+<!--?>-->
+<!---->
+<!--</select><br><br>-->
+<!--<input type="button" id="tijiao" value="开始"  class="btn">&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" id="stop" class="btn" value="停止">-->
+
+
+
+<script>
+    $(function(){
+        $('#stop').click(function(){
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "/VitasCoinControlPrice/stop.php",
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "data": {
+                    "startPrice": $('#startPrice').val(),
+                    "endPrice": $('#endPrice').val(),
+                    "sell_ratio": $('#sell_ratio').val(),
+                    "buy_ratio": $('#buy_ratio').val(),
+                    "period": $('#period').val(),
+                    "webrange": $('#webrange').val(),
+                    "coin": $('#coin').val()
+                }
+            }
+
+            $.ajax(settings).done(function (res) {
+                var result = JSON.parse(res);
+                switch(result['code']){
+                    case 50:
+                        alert("请先登陆！");
+                        break;
+                    case 110:
+                        alert("参数格式不正确！");
+                        break;
+                    case 404:
+                        alert(result['msg']);
+                        break;
+                    case 500:
+                        alert(result['msg']);
+                        break;
+                    default:
+                        alert(result['msg']);
+                }
+                console.log(result);
+            });
+        });
+
+        $('#tijiao').click(function(){
+            var settings = {
+                "async": true,
+                "crossDomain": true,
+                "url": "/VitasCoinControlPrice/main.php",
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                "data": {
+                    "startPrice": $('#startPrice').val(),
+                    "endPrice": $('#endPrice').val(),
+                    "sell_ratio": $('#sell_ratio').val(),
+                    "buy_ratio": $('#buy_ratio').val(),
+                    "period": $('#period').val(),
+                    "webrange": $('#webrange').val(),
+		            "coin": $('#coin').val()
+                }
+            }
+
+            $.ajax(settings).done(function (res) {
+                var result = JSON.parse(res);
+                switch(result['code']){
+                            case 50:
+                                alert("请先登陆！");
+                                break;
+                            case 110:
+                                alert("参数格式不正确！");
+                                break;
+                            case 404:
+                                alert(result['msg']);
+                                break;
+                            case 500:
+                                alert(result['msg']);
+                                break;
+                }
+                console.log(result);
+            });
+        });
+
+    })
+</script>
+</body>
+</html>
